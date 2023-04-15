@@ -1,6 +1,6 @@
 package edu.goit.cryptoservice.parser;
 
-import edu.goit.cryptoservice.entity.Currency;
+import edu.goit.cryptoservice.entity.CryptoCurrency;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -13,29 +13,29 @@ import java.util.TimeZone;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileParserTest {
+class FileFileParserTest {
 
-    private final FileParser<Currency> fileParser = new FileParser<>(Currency.class);
+    final FileParser<CryptoCurrency> fileParser = new FileParser<>(CryptoCurrency.class, "src/test/resources/ETH_values2.txt");
 
     @Test
     void parseFileTestTXT() throws ParseException {
 
-        List<Currency> expected = new ArrayList<>();
+        List<CryptoCurrency> expected = new ArrayList<>();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-        expected.add(Currency.builder()
+        expected.add(CryptoCurrency.builder()
                 .symbol("ETH")
                 .price(BigDecimal.valueOf(371532))
                 .timestamp(dateFormat.parse("2022-01-01T08:00"))
                 .build());
-        expected.add(Currency.builder()
+        expected.add(CryptoCurrency.builder()
                 .symbol("ETH")
                 .price(BigDecimal.valueOf(371867))
                 .timestamp(dateFormat.parse("2022-01-01T10:00"))
                 .build());
-        List<Currency> actual = fileParser.parseFile("src/test/resources/ETH_values.txt").get();
+        List<CryptoCurrency> actual = fileParser.parse().orElse(new ArrayList<>());
 
         assertEquals(expected, actual);
 
@@ -43,24 +43,22 @@ class FileParserTest {
 
     @Test
     void parseFileTestCSV() {
-
-        List<Currency> expected = new ArrayList<>();
-        expected.add(Currency.builder()
+        fileParser.changeFile("src/test/resources/DOGE_values2.csv");
+        List<CryptoCurrency> expected = new ArrayList<>();
+        expected.add(CryptoCurrency.builder()
                 .symbol("DOGE")
                 .price(BigDecimal.valueOf(0.1702))
                 .timestamp(new Date(1641013200000L))
                 .build());
-        expected.add(Currency.builder()
+        expected.add(CryptoCurrency.builder()
                 .symbol("DOGE")
                 .price(BigDecimal.valueOf(0.1722))
                 .timestamp(new Date(1641074400000L))
                 .build());
 
-        List<Currency> actual = fileParser.parseFile("src/test/resources/DOGE_values.csv").get();
+        List<CryptoCurrency> actual = fileParser.parse().orElse(new ArrayList<>());
 
         assertEquals(expected, actual);
 
     }
-
-
 }

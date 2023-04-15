@@ -1,0 +1,2 @@
+{"symbol":"ETH","price":371532,"timestamp":"2022-01-01T08:00"}
+{"symbol":"ETH","price":371867,"timestamp":"2022-01-01T10:00"}

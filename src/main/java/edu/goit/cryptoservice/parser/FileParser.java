@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import edu.goit.cryptoservice.entity.Currency;
-import edu.goit.cryptoservice.util.FileChecker;
-import edu.goit.cryptoservice.util.FileTypes;
+import edu.goit.cryptoservice.entity.CryptoCurrency;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -15,31 +13,39 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class FileParser<E> implements BaseFileParser<E> {
+public class FileParser<E> implements BaseParser<E> {
 
     private final Class<E> entityClass;
 
-    public FileParser(Class<E> entityClass) {
+    private File file;
+    private final FileParser<E> instance;
+
+    public FileParser<E> changeFile(String filePath) {
+        this.file = new File(filePath);
+        return instance;
+    }
+
+    public FileParser(Class<E> entityClass, String filePath) {
+        this.file = new File(filePath);
         this.entityClass = entityClass;
+        instance = this;
     }
 
     @Override
-    public Optional<List<E>> parseFile(String filePath) {
+    public Optional<List<E>> parse() {
 
-        FileTypes fileTypes = FileChecker.getFileType(filePath);
-
-        switch(fileTypes) {
+        switch (getFileType(file.getPath())) {
             case csv:
-                return parseCSVFile(filePath);
+                return parseCSVFile();
             case txt:
-                return parseTXTFile(filePath);
+                return parseTXTFile();
             default:
                 return Optional.empty();
         }
 
-     }
+    }
 
-    private Optional<List<E>> parseCSVFile(String filePath) {
+    private Optional<List<E>> parseCSVFile() {
 
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.builder()
@@ -50,19 +56,18 @@ public class FileParser<E> implements BaseFileParser<E> {
         module.addDeserializer(Date.class, new MillisecondsDateDeserializer());
         mapper.registerModule(module);
 
-        try (MappingIterator<E> it = mapper.readerFor(Currency.class).with(schema).readValues(new File(filePath))) {
+        try (MappingIterator<E> it = mapper.readerFor(CryptoCurrency.class).with(schema).readValues(file)) {
             return Optional.of(it.readAll());
         } catch (IOException e) {
             return Optional.empty();
         }
     }
 
-    private Optional<List<E>> parseTXTFile(String filePath) {
+    private Optional<List<E>> parseTXTFile() {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        try (var reader = new BufferedReader(new FileReader(filePath))) {
-
+        try (var reader = new BufferedReader(new FileReader(file))) {
             List<E> data = new ArrayList<>();
             while (reader.ready()) {
                 data.add(objectMapper.readValue(reader.readLine(), entityClass));
@@ -72,6 +77,20 @@ public class FileParser<E> implements BaseFileParser<E> {
             return Optional.empty();
         }
     }
+
+    private FileTypes getFileType(String filePath) {
+
+        String strFileType = filePath.replaceAll("^.*\\.", "");
+
+        for (FileTypes type : FileTypes.values()
+        ) {
+            if (strFileType.equals(type.name())) {
+                return type;
+            }
+        }
+        return FileTypes.wrongType;
+    }
+
 }
 
 

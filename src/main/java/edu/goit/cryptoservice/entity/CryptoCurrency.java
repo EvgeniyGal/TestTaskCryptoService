@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Currency implements BaseCurrency{
+public class CryptoCurrency implements BaseCurrency{
     private String symbol;
     private BigDecimal price;
     private Date timestamp;
