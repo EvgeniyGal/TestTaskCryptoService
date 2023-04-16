@@ -27,12 +27,12 @@ class FileFileParserTest {
 
         expected.add(CryptoCurrency.builder()
                 .symbol("ETH")
-                .price(BigDecimal.valueOf(371532))
+                .price(BigDecimal.valueOf(37.1532))
                 .timestamp(dateFormat.parse("2022-01-01T08:00"))
                 .build());
         expected.add(CryptoCurrency.builder()
                 .symbol("ETH")
-                .price(BigDecimal.valueOf(371867))
+                .price(BigDecimal.valueOf(37.1867))
                 .timestamp(dateFormat.parse("2022-01-01T10:00"))
                 .build());
         List<CryptoCurrency> actual = fileParser.parse().orElse(new ArrayList<>());

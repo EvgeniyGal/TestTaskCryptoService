@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileParserFactory {
-    private final Map<String, BaseParser> Parsers;
+    private final Map<String, FileParser> Parsers;
 
     private static FileParserFactory fileParserFactory;
 
@@ -19,9 +19,9 @@ public class FileParserFactory {
         this.Parsers = new ConcurrentHashMap<>();
     }
 
-    public synchronized <E> BaseParser<E> of(Class<E> entityClass, String filePath) {
+    public synchronized <E> FileParser of(Class<E> entityClass, String filePath) {
         if (!Parsers.containsKey(entityClass.getName())) {
-            BaseParser fileParser = new FileParser(entityClass, filePath);
+            FileParser fileParser = new FileParser(entityClass, filePath);
             Parsers.put(entityClass.getName(), fileParser);
         }
         return Parsers.get(entityClass.getName());

@@ -11,6 +11,11 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
 
     @Override
     public Optional<BigDecimal> getMinValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+
+        if (cryptoData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
+
         return StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))
                 .filter(cur -> cur.getTimestamp().before(endPeriod))
@@ -19,6 +24,11 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
 
     @Override
     public Optional<BigDecimal> getMaxValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+
+        if (cryptoData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
+
         return StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))
                 .filter(cur -> cur.getTimestamp().before(endPeriod))
@@ -27,6 +37,10 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
 
     @Override
     public Optional<BigDecimal> getAverageValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+
+        if (cryptoData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
 
         BigDecimal size = BigDecimal.valueOf(StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))

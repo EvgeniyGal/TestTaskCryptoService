@@ -3,7 +3,6 @@ package edu.goit.cryptoservice.parser;
 import lombok.SneakyThrows;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;

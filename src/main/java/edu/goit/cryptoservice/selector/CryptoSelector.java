@@ -13,76 +13,100 @@ public class CryptoSelector implements BaseSelector<CryptoCurrency> {
     private final CryptoDataAnalyzer analyzer = new CryptoDataAnalyzer();
 
     @Override
-    public Optional<CryptoCurrency> selectByMinValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+    public Optional<CryptoCurrency> selectByMinValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+                                                     Date startPeriod, Date endPeriod) {
+
+        if (currencyData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
 
         TreeMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new TreeMap<>();
 
-        for (Iterable<CryptoCurrency> currency : currencyData
-        ) {
-            BigDecimal minValue = analyzer.getMinValue(currency, startPeriod, endPeriod).orElse(BigDecimal.ZERO);
-            analiseData.put(minValue, currency);
+        StreamSupport.stream(currencyData.spliterator(), false)
+                .forEach(e -> analyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+
+        if (analiseData.isEmpty()) {
+            return Optional.empty();
         }
 
-        return StreamSupport.stream(analiseData.firstEntry().getValue().spliterator(),false)
+        return StreamSupport.stream(analiseData.firstEntry().getValue().spliterator(), false)
                 .filter(e -> e.getPrice().equals(analiseData.firstKey())).findFirst();
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByMaxValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+    public Optional<CryptoCurrency> selectByMaxValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+                                                     Date startPeriod, Date endPeriod) {
+
+        if (currencyData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
 
         TreeMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new TreeMap<>();
 
-        for (Iterable<CryptoCurrency> currency : currencyData
-        ) {
-            BigDecimal maxValue = analyzer.getMaxValue(currency, startPeriod, endPeriod).orElse(BigDecimal.ZERO);
-            analiseData.put(maxValue, currency);
-        }
+        StreamSupport.stream(currencyData.spliterator(), false)
+                .forEach(e -> analyzer.getMaxValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
 
-        return StreamSupport.stream(analiseData.lastEntry().getValue().spliterator(),false)
+        if (analiseData.isEmpty()) {
+            return Optional.empty();
+        }
+        return StreamSupport.stream(analiseData.lastEntry().getValue().spliterator(), false)
                 .filter(e -> e.getPrice().equals(analiseData.lastKey())).findFirst();
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByAverageValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+    public Optional<CryptoCurrency> selectByAverageValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+                                                         Date startPeriod, Date endPeriod) {
+
+        if (currencyData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
 
         HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new HashMap<>();
 
-        for (Iterable<CryptoCurrency> currency : currencyData
-        ) {
-            analiseData.put(analyzer.getAverageValue(currency, startPeriod, endPeriod).orElse(BigDecimal.ZERO),
-                    currency);
+        StreamSupport.stream(currencyData.spliterator(), false)
+                .forEach(e -> analyzer.getAverageValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+
+        if (analiseData.isEmpty()) {
+            return Optional.empty();
         }
 
-        BigDecimal sumAverage = analiseData.keySet().stream().reduce(BigDecimal.ZERO,BigDecimal::add);
-
-        BigDecimal totalAverage = sumAverage.divide(BigDecimal.valueOf(analiseData.size()), 2, RoundingMode.HALF_UP);
+        BigDecimal average = getAverage(analiseData);
 
         BigDecimal closestToAverage = analiseData.keySet().stream()
-                .min(Comparator.comparing(k -> k.subtract(totalAverage).abs())).orElse(BigDecimal.ZERO);
+                .min(Comparator.comparing(k -> k.subtract(average).abs())).orElse(BigDecimal.ZERO);
 
-        return StreamSupport.stream(analiseData.get(closestToAverage).spliterator(),false)
-                .min(Comparator.comparing(k -> k.getPrice().subtract(totalAverage).abs()));
+        return StreamSupport.stream(analiseData.get(closestToAverage).spliterator(), false)
+                .min(Comparator.comparing(k -> k.getPrice().subtract(average).abs()));
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByNormalyseValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+    public Optional<CryptoCurrency> selectByNormaliseValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+
+        if (currencyData == null || startPeriod == null || endPeriod == null) {
+            return Optional.empty();
+        }
 
         HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new HashMap<>();
 
-        for (Iterable<CryptoCurrency> currency : currencyData
-        ) {
-            analiseData.put(analyzer.getNormalyseValue(currency, startPeriod, endPeriod).orElse(BigDecimal.ZERO),
-                    currency);
+        StreamSupport.stream(currencyData.spliterator(), false)
+                .forEach(e -> analyzer.getNormaliseValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+
+        if (analiseData.isEmpty()) {
+            return Optional.empty();
         }
 
-        BigDecimal sumNormalyse = analiseData.keySet().stream().reduce(BigDecimal.ZERO,BigDecimal::add);
+        BigDecimal average = getAverage(analiseData);
 
-        BigDecimal totalNormalyse = sumNormalyse.divide(BigDecimal.valueOf(analiseData.size()), 2, RoundingMode.HALF_UP);
+        BigDecimal closestToNormalise = analiseData.keySet().stream()
+                .min(Comparator.comparing(k -> k.subtract(average).abs())).orElse(BigDecimal.ZERO);
 
-        BigDecimal closestToNormalyse = analiseData.keySet().stream()
-                .min(Comparator.comparing(k -> k.subtract(totalNormalyse).abs())).orElse(BigDecimal.ZERO);
-
-        return StreamSupport.stream(analiseData.get(closestToNormalyse).spliterator(),false)
-                .min(Comparator.comparing(k -> k.getPrice().subtract(totalNormalyse).abs()));
+        return StreamSupport.stream(analiseData.get(closestToNormalise).spliterator(), false)
+                .min(Comparator.comparing(k -> k.getPrice().subtract(average).abs()));
     }
+
+    private BigDecimal getAverage(HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData) {
+        BigDecimal sumAverage = analiseData.keySet().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+        return sumAverage.divide(BigDecimal.valueOf(analiseData.size()), 2, RoundingMode.HALF_UP);
+    }
+
 }

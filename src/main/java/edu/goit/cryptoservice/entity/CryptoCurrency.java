@@ -1,5 +1,6 @@
 package edu.goit.cryptoservice.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,10 +13,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CryptoCurrency implements BaseCurrency{
+public class CryptoCurrency implements BaseCurrency<BigDecimal> {
     private String symbol;
+    @JsonDeserialize(using = BigDecimalDeserializer.class)
     private BigDecimal price;
     private Date timestamp;
+
 }
 
 

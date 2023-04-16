@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,18 +40,18 @@ class CryptoSelectorTest {
     @Test
     void selectByMaxValue() {
         assertEquals("BTC", cryptoSelector.selectByMaxValue(cryptoData, startPeriod, endPeriod).get().getSymbol());
-        assertEquals(BigDecimal.valueOf(4733698), cryptoSelector.selectByMaxValue(cryptoData, startPeriod, endPeriod).get().getPrice());
+        assertEquals(BigDecimal.valueOf(473.3698), cryptoSelector.selectByMaxValue(cryptoData, startPeriod, endPeriod).get().getPrice());
     }
 
     @Test
     void selectByAverageValue() {
-        assertEquals("ETH", cryptoSelector.selectByAverageValue(cryptoData, startPeriod, endPeriod).get().getSymbol());
-        assertEquals(BigDecimal.valueOf(382811), cryptoSelector.selectByAverageValue(cryptoData, startPeriod, endPeriod).get().getPrice());
+        assertEquals("LTC", cryptoSelector.selectByAverageValue(cryptoData, startPeriod, endPeriod).get().getSymbol());
+        assertEquals(BigDecimal.valueOf(111.9), cryptoSelector.selectByAverageValue(cryptoData, startPeriod, endPeriod).get().getPrice());
     }
 
     @Test
     void selectByNormalyseValue() {
-        assertEquals("DOGE", cryptoSelector.selectByNormalyseValue(cryptoData, startPeriod, endPeriod).get().getSymbol());
-        assertEquals(BigDecimal.valueOf(0.1941), cryptoSelector.selectByNormalyseValue(cryptoData, startPeriod, endPeriod).get().getPrice());
+        assertEquals("DOGE", cryptoSelector.selectByNormaliseValue(cryptoData, startPeriod, endPeriod).get().getSymbol());
+        assertEquals(BigDecimal.valueOf(0.1941), cryptoSelector.selectByNormaliseValue(cryptoData, startPeriod, endPeriod).get().getPrice());
     }
 }

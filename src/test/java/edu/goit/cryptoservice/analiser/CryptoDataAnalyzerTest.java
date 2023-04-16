@@ -36,7 +36,7 @@ class CryptoDataAnalyzerTest {
 
     @Test
     void getNormalizeValueTest() {
-        assertEquals(BigDecimal.valueOf(0.1538), cryptoDataAnalyzer.getNormalyseValue(currencies, startPeriod, endPeriod).get());
+        assertEquals(BigDecimal.valueOf(0.1538), cryptoDataAnalyzer.getNormaliseValue(currencies, startPeriod, endPeriod).get());
     }
 
 }

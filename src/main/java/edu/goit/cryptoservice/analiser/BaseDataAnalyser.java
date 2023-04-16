@@ -14,7 +14,7 @@ public interface BaseDataAnalyser<E extends BaseCurrency> {
 
     Optional<BigDecimal> getAverageValue(Iterable<E> iterable, Date startPeriod, Date endPeriod);
 
-    default Optional<BigDecimal> getNormalyseValue(Iterable<E> iterable, Date startPeriod, Date endPeriod) {
+    default Optional<BigDecimal> getNormaliseValue(Iterable<E> iterable, Date startPeriod, Date endPeriod) {
         Optional<BigDecimal> minOptional = getMinValue(iterable, startPeriod, endPeriod);
         Optional<BigDecimal> maxOptional = getMaxValue(iterable, startPeriod, endPeriod);
         if (minOptional.isPresent() && maxOptional.isPresent()) {
