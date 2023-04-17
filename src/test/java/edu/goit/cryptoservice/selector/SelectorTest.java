@@ -22,12 +22,12 @@ class SelectorTest {
 
     @BeforeAll
     static void beforeAll() {
-        FileParser<CryptoCurrency> fileParser = new FileParser<>(CryptoCurrency.class, "src/test/resources/BTC_values.txt");
-        cryptoData.add(fileParser.parse().orElse(new ArrayList<>()));
-        cryptoData.add(fileParser.changeFile("src/test/resources/DOGE_values.csv").parse().orElse(new ArrayList<>()));
-        cryptoData.add(fileParser.changeFile("src/test/resources/ETH_values.txt").parse().orElse(new ArrayList<>()));
-        cryptoData.add(fileParser.changeFile("src/test/resources/LTC_values.csv").parse().orElse(new ArrayList<>()));
-        cryptoData.add(fileParser.changeFile("src/test/resources/XRP_values.csv").parse().orElse(new ArrayList<>()));
+        FileParser<CryptoCurrency> fileParser = new FileParser<>(CryptoCurrency.class);
+        cryptoData.add(fileParser.parse("src/test/resources/BTC_values.txt").orElse(new ArrayList<>()));
+        cryptoData.add(fileParser.parse("src/test/resources/DOGE_values.csv").orElse(new ArrayList<>()));
+        cryptoData.add(fileParser.parse("src/test/resources/ETH_values.txt").orElse(new ArrayList<>()));
+        cryptoData.add(fileParser.parse("src/test/resources/LTC_values.csv").orElse(new ArrayList<>()));
+        cryptoData.add(fileParser.parse("src/test/resources/XRP_values.csv").orElse(new ArrayList<>()));
     }
 
 

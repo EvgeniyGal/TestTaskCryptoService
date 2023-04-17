@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FileFileParserTest {
 
-    final FileParser<CryptoCurrency> fileParser = new FileParser<>(CryptoCurrency.class, "src/test/resources/ETH_values2.txt");
+    final FileParser<CryptoCurrency> fileParser = new FileParser<>(CryptoCurrency.class);
 
     @Test
     void parseFileTestTXT() throws ParseException {
@@ -35,7 +35,7 @@ class FileFileParserTest {
                 .price(BigDecimal.valueOf(37.1867))
                 .timestamp(dateFormat.parse("2022-01-01T10:00"))
                 .build());
-        List<CryptoCurrency> actual = fileParser.parse().orElse(new ArrayList<>());
+        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/ETH_values2.txt").orElse(new ArrayList<>());
 
         assertEquals(expected, actual);
 
@@ -43,7 +43,6 @@ class FileFileParserTest {
 
     @Test
     void parseFileTestCSV() {
-        fileParser.changeFile("src/test/resources/DOGE_values2.csv");
         List<CryptoCurrency> expected = new ArrayList<>();
         expected.add(CryptoCurrency.builder()
                 .symbol("DOGE")
@@ -56,7 +55,7 @@ class FileFileParserTest {
                 .timestamp(new Date(1641074400000L))
                 .build());
 
-        List<CryptoCurrency> actual = fileParser.parse().orElse(new ArrayList<>());
+        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/DOGE_values2.csv").orElse(new ArrayList<>());
 
         assertEquals(expected, actual);
 

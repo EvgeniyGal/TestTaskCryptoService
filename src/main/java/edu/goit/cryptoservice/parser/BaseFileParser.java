@@ -2,6 +2,9 @@ package edu.goit.cryptoservice.parser;
 
 import edu.goit.cryptoservice.entity.BaseCurrency;
 
-public interface BaseFileParser<E extends BaseCurrency<? extends Number>> extends BaseParser<E> {
-    BaseFileParser<E> changeFile(String filePath);
+import java.util.List;
+import java.util.Optional;
+
+public interface BaseFileParser<E extends BaseCurrency<? extends Number>> {
+    Optional<List<E>> parse(String filePath);
 }

@@ -13,14 +13,14 @@ import java.util.List;
 public class Application {
     public static void main(String[] args) {
         FileParserFactory factory = FileParserFactory.getInstance();
-        BaseFileParser<CryptoCurrency> fileParser = factory.of(CryptoCurrency.class, "src/main/resources/prices/BTC_values.txt");
+        BaseFileParser<CryptoCurrency> fileParser = factory.of(CryptoCurrency.class);
 
         List<Iterable<CryptoCurrency>> cryptoData = new ArrayList<>();
-        fileParser.parse().ifPresent(cryptoData::add);
-        fileParser.changeFile("src/main/resources/prices/DOGE_values.csv").parse().ifPresent(cryptoData::add);
-        fileParser.changeFile("src/main/resources/prices/ETH_values.txt").parse().ifPresent(cryptoData::add);
-        fileParser.changeFile("src/main/resources/prices/LTC_values.csv").parse().ifPresent(cryptoData::add);
-        fileParser.changeFile("src/main/resources/prices/XRP_values.csv").parse().ifPresent(cryptoData::add);
+        fileParser.parse("src/main/resources/prices/BTC_values.txt").ifPresent(cryptoData::add);
+        fileParser.parse("src/main/resources/prices/DOGE_values.csv").ifPresent(cryptoData::add);
+        fileParser.parse("src/main/resources/prices/ETH_values.txt").ifPresent(cryptoData::add);
+        fileParser.parse("src/main/resources/prices/LTC_values.csv").ifPresent(cryptoData::add);
+        fileParser.parse("src/main/resources/prices/XRP_values.csv").ifPresent(cryptoData::add);
 
         final Date startPeriod = new Date(1641283200000L);
         final Date endPeriod = new Date(1642093200000L);

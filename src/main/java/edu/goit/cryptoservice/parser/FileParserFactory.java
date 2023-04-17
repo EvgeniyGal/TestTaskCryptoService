@@ -19,9 +19,9 @@ public class FileParserFactory {
         this.Parsers = new ConcurrentHashMap<>();
     }
 
-    public synchronized <E> BaseFileParser of(Class<E> entityClass, String filePath) {
+    public synchronized <E> BaseFileParser of(Class<E> entityClass) {
         if (!Parsers.containsKey(entityClass.getName())) {
-            BaseFileParser fileParser = new FileParser(entityClass, filePath);
+            BaseFileParser fileParser = new FileParser(entityClass);
             Parsers.put(entityClass.getName(), fileParser);
         }
         return Parsers.get(entityClass.getName());

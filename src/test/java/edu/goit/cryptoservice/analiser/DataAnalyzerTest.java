@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DataAnalyzerTest {
 
-    final List<CryptoCurrency> currencies = (new FileParser<>(CryptoCurrency.class,
-            "src/test/resources/XRP_values.csv").parse().orElse(new ArrayList<>()));
+    final List<CryptoCurrency> currencies = (new FileParser<>(CryptoCurrency.class)
+            .parse("src/test/resources/XRP_values.csv").orElse(new ArrayList<>()));
     final Date startPeriod = new Date(1641283200000L);
     final Date endPeriod = new Date(1642093200000L);
     final DataAnalyzer<CryptoCurrency> dataAnalyzer = new DataAnalyzer<>();

@@ -19,35 +19,25 @@ public class FileParser<E extends BaseCurrency<BigDecimal>> implements BaseFileP
 
     private final Class<E> entityClass;
 
-    private File file;
-    private final FileParser<E> instance;
-
-    public FileParser<E> changeFile(String filePath) {
-        this.file = new File(filePath);
-        return instance;
-    }
-
-    public FileParser(Class<E> entityClass, String filePath) {
-        this.file = new File(filePath);
+    public FileParser(Class<E> entityClass) {
         this.entityClass = entityClass;
-        instance = this;
     }
 
     @Override
-    public Optional<List<E>> parse() {
+    public Optional<List<E>> parse(String filePath) {
 
-        switch (getFileType(file.getPath())) {
+        switch (getFileType(filePath)) {
             case csv:
-                return parseCSVFile();
+                return parseCSVFile(filePath);
             case txt:
-                return parseTXTFile();
+                return parseTXTFile(filePath);
             default:
                 return Optional.empty();
         }
 
     }
 
-    private Optional<List<E>> parseCSVFile() {
+    private Optional<List<E>> parseCSVFile(String filePath) {
 
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.builder()
@@ -58,18 +48,18 @@ public class FileParser<E extends BaseCurrency<BigDecimal>> implements BaseFileP
         module.addDeserializer(Date.class, new MillisecondsDateDeserializer());
         mapper.registerModule(module);
 
-        try (MappingIterator<E> it = mapper.readerFor(CryptoCurrency.class).with(schema).readValues(file)) {
+        try (MappingIterator<E> it = mapper.readerFor(CryptoCurrency.class).with(schema).readValues(new File(filePath))) {
             return Optional.of(it.readAll());
         } catch (IOException e) {
             return Optional.empty();
         }
     }
 
-    private Optional<List<E>> parseTXTFile() {
+    private Optional<List<E>> parseTXTFile(String filePath) {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        try (var reader = new BufferedReader(new FileReader(file))) {
+        try (var reader = new BufferedReader(new FileReader(filePath))) {
             List<E> data = new ArrayList<>();
             while (reader.ready()) {
                 data.add(objectMapper.readValue(reader.readLine(), entityClass));
