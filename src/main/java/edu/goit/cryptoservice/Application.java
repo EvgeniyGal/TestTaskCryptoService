@@ -1,10 +1,10 @@
 package edu.goit.cryptoservice;
 
-import edu.goit.cryptoservice.analiser.CryptoDataAnalyzer;
+import edu.goit.cryptoservice.analiser.DataAnalyzer;
 import edu.goit.cryptoservice.entity.CryptoCurrency;
-import edu.goit.cryptoservice.parser.FileParser;
+import edu.goit.cryptoservice.parser.BaseFileParser;
 import edu.goit.cryptoservice.parser.FileParserFactory;
-import edu.goit.cryptoservice.selector.CryptoSelector;
+import edu.goit.cryptoservice.selector.Selector;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,7 +13,7 @@ import java.util.List;
 public class Application {
     public static void main(String[] args) {
         FileParserFactory factory = FileParserFactory.getInstance();
-        FileParser<CryptoCurrency> fileParser = factory.of(CryptoCurrency.class, "src/main/resources/prices/BTC_values.txt");
+        BaseFileParser<CryptoCurrency> fileParser = factory.of(CryptoCurrency.class, "src/main/resources/prices/BTC_values.txt");
 
         List<Iterable<CryptoCurrency>> cryptoData = new ArrayList<>();
         fileParser.parse().ifPresent(cryptoData::add);
@@ -25,8 +25,8 @@ public class Application {
         final Date startPeriod = new Date(1641283200000L);
         final Date endPeriod = new Date(1642093200000L);
 
-        CryptoDataAnalyzer dataAnalyzer = new CryptoDataAnalyzer();
-        CryptoSelector selector = new CryptoSelector();
+        DataAnalyzer<CryptoCurrency> dataAnalyzer = new DataAnalyzer<>();
+        Selector<CryptoCurrency> selector = new Selector<>();
 
         System.out.println("\nGet min value from Data");
         cryptoData.forEach(e -> dataAnalyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(r ->

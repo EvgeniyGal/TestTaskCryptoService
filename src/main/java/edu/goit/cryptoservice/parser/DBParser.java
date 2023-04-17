@@ -1,13 +1,13 @@
 package edu.goit.cryptoservice.parser;
 
+import edu.goit.cryptoservice.entity.BaseCurrency;
 import lombok.SneakyThrows;
 
-import java.io.Closeable;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public class DBParser<E> implements Closeable, BaseParser<E> {
+public class DBParser<E extends BaseCurrency<? extends Number>> implements BaseDBParser<E>{
 
     private final Connection connection;
     private final Class<E> entityClass;

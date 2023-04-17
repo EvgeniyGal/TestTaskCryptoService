@@ -1,16 +1,16 @@
 package edu.goit.cryptoservice.analiser;
 
-import edu.goit.cryptoservice.entity.CryptoCurrency;
+import edu.goit.cryptoservice.entity.BaseCurrency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
-public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
+public class DataAnalyzer<E extends BaseCurrency<? extends Number>> implements BaseDataAnalyser<E> {
 
     @Override
-    public Optional<BigDecimal> getMinValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+    public Optional<BigDecimal> getMinValue(Iterable<E> cryptoData, Date startPeriod, Date endPeriod) {
 
         if (cryptoData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -19,11 +19,13 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
         return StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))
                 .filter(cur -> cur.getTimestamp().before(endPeriod))
-                .map(CryptoCurrency::getPrice).min(BigDecimal::compareTo);
+                .map(E::getPrice)
+                .map(e -> BigDecimal.valueOf(e.doubleValue()))
+                .min(BigDecimal::compareTo);
     }
 
     @Override
-    public Optional<BigDecimal> getMaxValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+    public Optional<BigDecimal> getMaxValue(Iterable<E> cryptoData, Date startPeriod, Date endPeriod) {
 
         if (cryptoData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -32,11 +34,13 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
         return StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))
                 .filter(cur -> cur.getTimestamp().before(endPeriod))
-                .map(CryptoCurrency::getPrice).max(BigDecimal::compareTo);
+                .map(E::getPrice)
+                .map(e -> BigDecimal.valueOf(e.doubleValue()))
+                .max(BigDecimal::compareTo);
     }
 
     @Override
-    public Optional<BigDecimal> getAverageValue(Iterable<CryptoCurrency> cryptoData, Date startPeriod, Date endPeriod) {
+    public Optional<BigDecimal> getAverageValue(Iterable<E> cryptoData, Date startPeriod, Date endPeriod) {
 
         if (cryptoData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -49,7 +53,8 @@ public class CryptoDataAnalyzer implements BaseDataAnalyser<CryptoCurrency> {
         return Optional.of(StreamSupport.stream(cryptoData.spliterator(), false)
                 .filter(cur -> cur.getTimestamp().after(startPeriod))
                 .filter(cur -> cur.getTimestamp().before(endPeriod))
-                .map(CryptoCurrency::getPrice)
+                .map(E::getPrice)
+                .map(e -> BigDecimal.valueOf(e.doubleValue()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add).divide(size, 4, RoundingMode.HALF_UP));
     }
 

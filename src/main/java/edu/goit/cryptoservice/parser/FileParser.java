@@ -5,15 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import edu.goit.cryptoservice.entity.BaseCurrency;
 import edu.goit.cryptoservice.entity.CryptoCurrency;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class FileParser<E> implements BaseParser<E> {
+public class FileParser<E extends BaseCurrency<BigDecimal>> implements BaseFileParser<E> {
 
     private final Class<E> entityClass;
 

@@ -1,26 +1,26 @@
 package edu.goit.cryptoservice.selector;
 
-import edu.goit.cryptoservice.analiser.CryptoDataAnalyzer;
-import edu.goit.cryptoservice.entity.CryptoCurrency;
+import edu.goit.cryptoservice.analiser.DataAnalyzer;
+import edu.goit.cryptoservice.entity.BaseCurrency;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.StreamSupport;
 
-public class CryptoSelector implements BaseSelector<CryptoCurrency> {
+public class Selector<E extends BaseCurrency<? extends Number>> implements BaseSelector<E> {
 
-    private final CryptoDataAnalyzer analyzer = new CryptoDataAnalyzer();
+    private final DataAnalyzer<E> analyzer = new DataAnalyzer<>();
 
     @Override
-    public Optional<CryptoCurrency> selectByMinValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+    public Optional<E> selectByMinValue(Iterable<? extends Iterable<E>> currencyData,
                                                      Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
         }
 
-        TreeMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new TreeMap<>();
+        TreeMap<BigDecimal, Iterable<E>> analiseData = new TreeMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
                 .forEach(e -> analyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
@@ -34,14 +34,14 @@ public class CryptoSelector implements BaseSelector<CryptoCurrency> {
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByMaxValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+    public Optional<E> selectByMaxValue(Iterable<? extends Iterable<E>> currencyData,
                                                      Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
         }
 
-        TreeMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new TreeMap<>();
+        TreeMap<BigDecimal, Iterable<E>> analiseData = new TreeMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
                 .forEach(e -> analyzer.getMaxValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
@@ -54,14 +54,14 @@ public class CryptoSelector implements BaseSelector<CryptoCurrency> {
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByAverageValue(Iterable<Iterable<CryptoCurrency>> currencyData,
+    public Optional<E> selectByAverageValue(Iterable<? extends Iterable<E>> currencyData,
                                                          Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
         }
 
-        HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new HashMap<>();
+        HashMap<BigDecimal, Iterable<E>> analiseData = new HashMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
                 .forEach(e -> analyzer.getAverageValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
@@ -76,17 +76,17 @@ public class CryptoSelector implements BaseSelector<CryptoCurrency> {
                 .min(Comparator.comparing(k -> k.subtract(average).abs())).orElse(BigDecimal.ZERO);
 
         return StreamSupport.stream(analiseData.get(closestToAverage).spliterator(), false)
-                .min(Comparator.comparing(k -> k.getPrice().subtract(average).abs()));
+                .min(Comparator.comparing(k -> BigDecimal.valueOf(k.getPrice().doubleValue()).subtract(average).abs()));
     }
 
     @Override
-    public Optional<CryptoCurrency> selectByNormaliseValue(Iterable<Iterable<CryptoCurrency>> currencyData, Date startPeriod, Date endPeriod) {
+    public Optional<E> selectByNormaliseValue(Iterable<? extends Iterable<E>> currencyData, Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
         }
 
-        HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData = new HashMap<>();
+        HashMap<BigDecimal, Iterable<E>> analiseData = new HashMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
                 .forEach(e -> analyzer.getNormaliseValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
@@ -101,10 +101,10 @@ public class CryptoSelector implements BaseSelector<CryptoCurrency> {
                 .min(Comparator.comparing(k -> k.subtract(average).abs())).orElse(BigDecimal.ZERO);
 
         return StreamSupport.stream(analiseData.get(closestToNormalise).spliterator(), false)
-                .min(Comparator.comparing(k -> k.getPrice().subtract(average).abs()));
+                .min(Comparator.comparing(k -> BigDecimal.valueOf(k.getPrice().doubleValue()).subtract(average).abs()));
     }
 
-    private BigDecimal getAverage(HashMap<BigDecimal, Iterable<CryptoCurrency>> analiseData) {
+    private BigDecimal getAverage(HashMap<BigDecimal, Iterable<E>> analiseData) {
         BigDecimal sumAverage = analiseData.keySet().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
         return sumAverage.divide(BigDecimal.valueOf(analiseData.size()), 2, RoundingMode.HALF_UP);
     }

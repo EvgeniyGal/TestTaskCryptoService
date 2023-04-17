@@ -7,7 +7,7 @@ import java.math.RoundingMode;
 import java.util.Date;
 import java.util.Optional;
 
-public interface BaseDataAnalyser<E extends BaseCurrency> {
+public interface BaseDataAnalyser<E extends BaseCurrency<? extends Number>> {
     Optional<BigDecimal> getMinValue(Iterable<E> iterable, Date startPeriod, Date endPeriod);
 
     Optional<BigDecimal> getMaxValue(Iterable<E> iterable, Date startPeriod, Date endPeriod);
