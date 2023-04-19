@@ -2,11 +2,10 @@ package edu.goit.cryptoservice.parser;
 
 import edu.goit.cryptoservice.entity.BaseCurrency;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public class FileParser<E extends BaseCurrency<BigDecimal>> implements BaseFileParser<E> {
+public class FileParser<E extends BaseCurrency<? extends Number>> implements BaseFileParser<E> {
 
     private final Class<E> entityClass;
 
