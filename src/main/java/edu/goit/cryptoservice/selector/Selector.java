@@ -1,5 +1,6 @@
 package edu.goit.cryptoservice.selector;
 
+import edu.goit.cryptoservice.analiser.BaseDataAnalyser;
 import edu.goit.cryptoservice.analiser.DataAnalyzer;
 import edu.goit.cryptoservice.entity.BaseCurrency;
 
@@ -10,11 +11,11 @@ import java.util.stream.StreamSupport;
 
 public class Selector<E extends BaseCurrency<? extends Number>> implements BaseSelector<E> {
 
-    private final DataAnalyzer<E> analyzer = new DataAnalyzer<>();
+    private final BaseDataAnalyser<E> analyzer = new DataAnalyzer<>();
 
     @Override
     public Optional<E> selectByMinValue(Iterable<? extends Iterable<E>> currencyData,
-                                                     Date startPeriod, Date endPeriod) {
+                                        Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -23,7 +24,10 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
         TreeMap<BigDecimal, Iterable<E>> analiseData = new TreeMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
-                .forEach(e -> analyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+                .forEach(e -> {
+                    if (e != null)
+                        analyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e));
+                });
 
         if (analiseData.isEmpty()) {
             return Optional.empty();
@@ -35,7 +39,7 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
 
     @Override
     public Optional<E> selectByMaxValue(Iterable<? extends Iterable<E>> currencyData,
-                                                     Date startPeriod, Date endPeriod) {
+                                        Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -44,7 +48,10 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
         TreeMap<BigDecimal, Iterable<E>> analiseData = new TreeMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
-                .forEach(e -> analyzer.getMaxValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+                .forEach(e -> {
+                    if (e != null)
+                        analyzer.getMaxValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e));
+                });
 
         if (analiseData.isEmpty()) {
             return Optional.empty();
@@ -55,7 +62,7 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
 
     @Override
     public Optional<E> selectByAverageValue(Iterable<? extends Iterable<E>> currencyData,
-                                                         Date startPeriod, Date endPeriod) {
+                                            Date startPeriod, Date endPeriod) {
 
         if (currencyData == null || startPeriod == null || endPeriod == null) {
             return Optional.empty();
@@ -64,7 +71,10 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
         HashMap<BigDecimal, Iterable<E>> analiseData = new HashMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
-                .forEach(e -> analyzer.getAverageValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+                .forEach(e -> {
+                    if (e != null)
+                        analyzer.getAverageValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e));
+                });
 
         if (analiseData.isEmpty()) {
             return Optional.empty();
@@ -89,7 +99,10 @@ public class Selector<E extends BaseCurrency<? extends Number>> implements BaseS
         HashMap<BigDecimal, Iterable<E>> analiseData = new HashMap<>();
 
         StreamSupport.stream(currencyData.spliterator(), false)
-                .forEach(e -> analyzer.getNormaliseValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e)));
+                .forEach(e -> {
+                    if (e != null)
+                        analyzer.getNormaliseValue(e, startPeriod, endPeriod).ifPresent(bD -> analiseData.put(bD, e));
+                });
 
         if (analiseData.isEmpty()) {
             return Optional.empty();

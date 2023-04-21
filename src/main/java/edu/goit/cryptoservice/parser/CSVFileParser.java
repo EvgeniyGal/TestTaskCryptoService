@@ -9,14 +9,14 @@ import edu.goit.cryptoservice.entity.CryptoCurrency;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public class CSVFileParser implements BaseFileTypeParser {
 
     @Override
-    public <E extends BaseCurrency<? extends Number>> Optional<List<E>> parseFile(Class<E> entityClass, String filePath) {
+    public <E extends BaseCurrency<? extends Number>> List<E> parseFile(Class<E> entityClass, String filePath) {
 
         CsvMapper mapper = new CsvMapper();
         CsvSchema schema = CsvSchema.builder()
@@ -28,9 +28,9 @@ public class CSVFileParser implements BaseFileTypeParser {
         mapper.registerModule(module);
 
         try (MappingIterator<E> it = mapper.readerFor(CryptoCurrency.class).with(schema).readValues(new File(filePath))) {
-            return Optional.of(it.readAll());
+            return it.readAll();
         } catch (IOException e) {
-            return Optional.empty();
+            return new ArrayList<>();
         }
     }
 }

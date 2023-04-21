@@ -30,7 +30,7 @@ class CSVFileParserTest {
                 .build());
 
         List<CryptoCurrency> actual = fileParser.parseFile(CryptoCurrency.class,
-                "src/test/resources/DOGE_values2.csv").orElse(new ArrayList<>());
+                "src/test/resources/DOGE_values2.csv");
 
         assertEquals(expected, actual);
 

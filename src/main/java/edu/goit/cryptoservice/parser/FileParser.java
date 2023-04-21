@@ -2,6 +2,7 @@ package edu.goit.cryptoservice.parser;
 
 import edu.goit.cryptoservice.entity.BaseCurrency;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,12 +15,12 @@ public class FileParser<E extends BaseCurrency<? extends Number>> implements Bas
     }
 
     @Override
-    public Optional<List<E>> parse(String filePath) {
+    public List<E> parse(String filePath) {
 
         Optional<FileTypes> currentFileType = getFileType(filePath);
 
         return currentFileType.isPresent() ? currentFileType.get().getFileTypeParser()
-                .parseFile(entityClass, filePath) : Optional.empty();
+                .parseFile(entityClass, filePath) : new ArrayList<>();
 
     }
 

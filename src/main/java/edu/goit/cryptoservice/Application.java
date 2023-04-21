@@ -1,9 +1,11 @@
 package edu.goit.cryptoservice;
 
+import edu.goit.cryptoservice.analiser.BaseDataAnalyser;
 import edu.goit.cryptoservice.analiser.DataAnalyzer;
 import edu.goit.cryptoservice.entity.CryptoCurrency;
 import edu.goit.cryptoservice.parser.BaseFileParser;
 import edu.goit.cryptoservice.parser.FileParserFactory;
+import edu.goit.cryptoservice.selector.BaseSelector;
 import edu.goit.cryptoservice.selector.Selector;
 
 import java.util.ArrayList;
@@ -16,17 +18,17 @@ public class Application {
         BaseFileParser<CryptoCurrency> fileParser = factory.of(CryptoCurrency.class);
 
         List<Iterable<CryptoCurrency>> cryptoData = new ArrayList<>();
-        fileParser.parse("src/main/resources/prices/BTC_values.txt").ifPresent(cryptoData::add);
-        fileParser.parse("src/main/resources/prices/DOGE_values.csv").ifPresent(cryptoData::add);
-        fileParser.parse("src/main/resources/prices/ETH_values.txt").ifPresent(cryptoData::add);
-        fileParser.parse("src/main/resources/prices/LTC_values.csv").ifPresent(cryptoData::add);
-        fileParser.parse("src/main/resources/prices/XRP_values.csv").ifPresent(cryptoData::add);
+        cryptoData.add(fileParser.parse("src/main/resources/prices/BTC_values.txt"));
+        cryptoData.add(fileParser.parse("src/main/resources/prices/DOGE_values.csv"));
+        cryptoData.add(fileParser.parse("src/main/resources/prices/ETH_values.txt"));
+        cryptoData.add(fileParser.parse("src/main/resources/prices/LTC_values.csv"));
+        cryptoData.add(fileParser.parse("src/main/resources/prices/XRP_values.csv"));
 
         final Date startPeriod = new Date(1641283200000L);
         final Date endPeriod = new Date(1642093200000L);
 
-        DataAnalyzer<CryptoCurrency> dataAnalyzer = new DataAnalyzer<>();
-        Selector<CryptoCurrency> selector = new Selector<>();
+        BaseDataAnalyser<CryptoCurrency> dataAnalyzer = new DataAnalyzer<>();
+        BaseSelector<CryptoCurrency> selector = new Selector<>();
 
         System.out.println("\nGet min value from Data");
         cryptoData.forEach(e -> dataAnalyzer.getMinValue(e, startPeriod, endPeriod).ifPresent(r ->

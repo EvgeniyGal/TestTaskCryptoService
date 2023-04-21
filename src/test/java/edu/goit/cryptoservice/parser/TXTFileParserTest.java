@@ -36,7 +36,7 @@ class TXTFileParserTest {
                 .build());
 
         List<CryptoCurrency> actual = fileParser.parseFile(CryptoCurrency.class,
-                "src/test/resources/ETH_values2.txt").orElse(new ArrayList<>());
+                "src/test/resources/ETH_values2.txt");
 
         assertEquals(expected, actual);
 

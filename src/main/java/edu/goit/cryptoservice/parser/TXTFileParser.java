@@ -8,22 +8,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class TXTFileParser implements BaseFileTypeParser {
 
     @Override
-    public <E extends BaseCurrency<? extends Number>> Optional<List<E>> parseFile(Class<E> entityClass, String filePath) {
+    public <E extends BaseCurrency<? extends Number>> List<E> parseFile(Class<E> entityClass, String filePath) {
                ObjectMapper objectMapper = new ObjectMapper();
 
+        List<E> data = new ArrayList<>();
+
         try (var reader = new BufferedReader(new FileReader(filePath))) {
-            List<E> data = new ArrayList<>();
             while (reader.ready()) {
                 data.add(objectMapper.readValue(reader.readLine(), entityClass));
             }
-            return Optional.of(data);
+            return data;
         } catch (IOException e) {
-            return Optional.empty();
+            return data;
         }
     }
 }

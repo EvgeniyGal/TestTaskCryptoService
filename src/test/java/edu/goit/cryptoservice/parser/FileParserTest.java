@@ -35,7 +35,7 @@ class FileParserTest {
                 .price(BigDecimal.valueOf(37.1867))
                 .timestamp(dateFormat.parse("2022-01-01T10:00"))
                 .build());
-        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/ETH_values2.txt").orElse(new ArrayList<>());
+        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/ETH_values2.txt");
 
         assertEquals(expected, actual);
 
@@ -56,7 +56,7 @@ class FileParserTest {
                 .timestamp(new Date(1641074400000L))
                 .build());
 
-        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/DOGE_values2.csv").orElse(new ArrayList<>());
+        List<CryptoCurrency> actual = fileParser.parse("src/test/resources/DOGE_values2.csv");
 
         assertEquals(expected, actual);
 
