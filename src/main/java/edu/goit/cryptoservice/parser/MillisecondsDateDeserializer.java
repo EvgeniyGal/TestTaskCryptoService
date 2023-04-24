@@ -11,9 +11,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 public class MillisecondsDateDeserializer extends JsonDeserializer<Date> {
 
     @Override
-    public Date deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        long milliseconds = p.getLongValue();
-        return new Date(milliseconds);
+    public Date deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+        return new Date(parser.getLongValue());
     }
 
 }

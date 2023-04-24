@@ -16,7 +16,7 @@ class DataAnalyzerTest {
             .parse("src/test/resources/XRP_values.csv"));
     final Date startPeriod = new Date(1641283200000L);
     final Date endPeriod = new Date(1642093200000L);
-    final DataAnalyzer<CryptoCurrency> dataAnalyzer = new DataAnalyzer<>();
+    final DataAnalyzer dataAnalyzer = new DataAnalyzer();
 
     @Test
     void getMinValueTest() {
