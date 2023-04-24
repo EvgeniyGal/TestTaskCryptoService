@@ -1,31 +1,28 @@
 package edu.goit.cryptoservice.parser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.goit.cryptoservice.entity.BaseCurrency;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import lombok.SneakyThrows;
 
 public class TXTFileParser implements BaseFileTypeParser {
 
+    private final static ObjectMapper MAPPER = new ObjectMapper();
+
+    @SneakyThrows
     @Override
-    public <E extends BaseCurrency<? extends Number>> List<E> parseFile(Class<E> entityClass, String filePath) {
-               ObjectMapper objectMapper = new ObjectMapper();
-
-        List<E> data = new ArrayList<>();
-
-        try (var reader = new BufferedReader(new FileReader(filePath))) {
-            while (reader.ready()) {
-                data.add(objectMapper.readValue(reader.readLine(), entityClass));
-            }
-            return data;
-        } catch (IOException e) {
-            return data;
+    public <E> List<E> parseFile(Class<E> entityClass, String filePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            return reader.lines()
+                    .map(line -> mapToEntity(line, entityClass))
+                    .collect(Collectors.toList());
         }
     }
+
+    @SneakyThrows
+    private <E> E mapToEntity(String line, Class<E> entityClass) {
+        return MAPPER.readValue(line, entityClass);
+    }
 }
-
-

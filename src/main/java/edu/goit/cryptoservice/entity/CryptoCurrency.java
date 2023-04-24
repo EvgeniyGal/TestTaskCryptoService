@@ -13,7 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CryptoCurrency implements BaseCurrency<BigDecimal> {
+public class CryptoCurrency {
     private String symbol;
     @JsonDeserialize(using = BigDecimalDeserializer.class)
     private BigDecimal price;

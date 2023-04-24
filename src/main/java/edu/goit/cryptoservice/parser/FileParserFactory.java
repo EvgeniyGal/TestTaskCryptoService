@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FileParserFactory {
-    private final Map<String, BaseFileParser> Parsers;
+    
+    private final Map<String, BaseFileParser> Parsers;//why capitalized?
 
     private static FileParserFactory fileParserFactory;
 

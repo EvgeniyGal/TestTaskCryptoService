@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class SelectorTest {
 
     static List<Iterable<CryptoCurrency>> cryptoData = new ArrayList<>();
-    BaseSelector<CryptoCurrency> selector = new Selector<>();
+    BaseSelector selector = new Selector();
     final Date startPeriod = new Date(1641110400000L);
     final Date endPeriod = new Date(1643148000000L);
 
